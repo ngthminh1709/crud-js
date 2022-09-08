@@ -1,11 +1,11 @@
-import {
+import { LOGIN_PAGE } from "./constant.js";
+import Method from "./method.js";
+const {
   getStudent,
   createStudent,
   deleteStudent,
   updateStudent,
-} from "./method.js";
-
-import { LOGIN_PAGE } from "./constant.js";
+} = new Method();
 
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);

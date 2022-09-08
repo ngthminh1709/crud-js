@@ -1,6 +1,6 @@
-import { getUser } from "./method.js";
+import Method from "./method.js";
 import { STUDENTS_PAGE } from "./constant.js";
-
+const { getUser } = new Method();
 const $ = document.querySelector.bind(document);
 
 const loginBtn = $(".btn-login");
