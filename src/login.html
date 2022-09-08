@@ -1,40 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="author" content="Tuan Le" />
+    <meta
+      name="keywords"
+      content="HTML, CSS, JavaScript Practice"
+    />
+    <meta
+      name="description"
+      content="HTML/CSS/JavaScript Practice - CRUD OPERATIONS"
+    />
+    <title>CRUD OPERATIONS</title>
+    <link rel="stylesheet" href="./styles/main.css" />
+    <link
+      rel="stylesheet"
+      href="./styles/pages/login.css"
+    />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="author" content="Tuan Le">
-  <meta name="keywords" content="HTML, CSS, JavaScript Practice">
-  <meta name="description" content="HTML/CSS/JavaScript Practice - CRUD OPERATIONS">
-  <title>CRUD OPERATIONS</title>
-  <link rel="stylesheet" href="./styles/main.css">
-  <link rel="stylesheet" href="./styles/pages/login.css">
-</head>
+  <body>
+    <div class="login">
+      <div class="login-info">
+        <h1 class="login-title">CRUD OPERATIONS</h1>
+        <h2 class="login-subtitle">SIGN IN</h2>
+        <p class="login-detail">
+          Enter your credentials to access your account
+        </p>
+      </div>
 
-<body>
-  <div class="login">
-    <div class="login-info">
-      <h1 class="login-title">CRUD OPERATIONS</h1>
-      <h2 class="login-subtitle">SIGN IN</h2>
-      <p class="login-detail">Enter your credentials to access your account</p>
+      <form method="get" id="form-login">
+        <div class="form-group">
+          <label class="form-label" for="email"
+            >Email</label
+          >
+          <input
+            class="form-control"
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="Password"
+            >Password</label
+          >
+          <input
+            class="form-control"
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+        <p id="message-error"></p>
+        <button class="btn-login" type="button">
+          Sign In
+        </button>
+      </form>
     </div>
 
-    <form method="get" id="form-login">
-      <div class="form-group">
-        <label class="form-label" for="email">Email</label>
-        <input class="form-control" type="email" id="email" placeholder="Enter your email" required>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="Password">Password</label>
-        <input class="form-control" type="password" id="password" placeholder="Enter your password" required>
-      </div>
-      <p id="message-error"></p>
-      <button class="btn-login" onclick="login()" type="button">Sign In</button>
-    </form>
-  </div>
-
-  <script src="./javascript/login.js"></script>
-</body>
-
+    <script
+      type="module"
+      src="./javascript/login.js"
+    ></script>
+  </body>
 </html>

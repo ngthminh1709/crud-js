@@ -1,145 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="author" content="Tuan Le" />
+    <meta
+      name="keywords"
+      content="HTML, CSS, JavaScript Practice"
+    />
+    <meta
+      name="description"
+      content="HTML/CSS/JavaScript Practice - CRUD OPERATIONS"
+    />
+    <title>CRUD OPERATIONS</title>
+    <link rel="stylesheet" href="./styles/main.css" />
+    <link
+      rel="stylesheet"
+      href="./styles/pages/students.css"
+    />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="author" content="Tuan Le">
-  <meta name="keywords" content="HTML, CSS, JavaScript Practice">
-  <meta name="description" content="HTML/CSS/JavaScript Practice - CRUD OPERATIONS">
-  <title>CRUD OPERATIONS</title>
-  <link rel="stylesheet" href="./styles/main.css">
-  <link rel="stylesheet" href="./styles/pages/students.css">
-</head>
+  <body>
+    <div class="sidebar">
+      <div class="logo">
+        <h1>CRUD OPERATIONS</h1>
+      </div>
 
-<body>
-  <div class="sidebar">
-    <div class="logo">
-      <h1>CRUD OPERATIONS</h1>
-    </div>
+      <div class="profile">
+        <img
+          src="./assets/images/profile-admin.jpg"
+          alt=""
+          class="avatar"
+        />
+        <p class="name"></p>
+        <p class="job">Admin</p>
+      </div>
+      <div class="menu">
+        <ul class="menu-items">
+          <li>
+            <img
+              class="icons"
+              src="./assets/icons/home-icon.svg"
+              alt=""
+            />
+            <a href="javascript:void(0)">Home</a>
+          </li>
+          <li>
+            <img
+              class="icons"
+              src="./assets/icons/course-icon.svg"
+              alt=""
+            />
+            <a href="javascript:void(0)">Cource</a>
+          </li>
+          <li>
+            <img
+              class="icons"
+              src="./assets/icons/graduation-icon.svg"
+              alt=""
+            />
+            <a href="javascript:void(0)">Student</a>
+          </li>
+          <li>
+            <img
+              class="icons"
+              src="./assets/icons/payment-icon.svg"
+              alt=""
+            />
+            <a href="javascript:void(0)">Payment</a>
+          </li>
+          <li>
+            <img
+              class="icons"
+              src="./assets/icons/report-icon.svg"
+              alt=""
+            />
+            <a href="javascript:void(0)">Report</a>
+          </li>
+          <li>
+            <img
+              class="icons"
+              src="./assets/icons/setting-icon.svg"
+              alt=""
+            />
+            <a href="javascript:void(0)">Settings</a>
+          </li>
+        </ul>
+      </div>
 
-    <div class="profile">
-      <img src="./assets/images/profile-admin.jpg" alt="" class="avatar">
-      <p class="name">Vu Phan</p>
-      <p class="job">Admin</p>
-    </div>
-    <div class="menu">
-      <ul class="menu-items">
-        <li>
-          <img class="icons" src="./assets/icons/home-icon.svg" alt="">
-          <a href="javascript:void(0)">Home</a>
-        </li>
-        <li>
-          <img class="icons" src="./assets/icons/course-icon.svg" alt="">
-          <a href="javascript:void(0)">Cource</a>
-        </li>
-        <li>
-          <img class="icons" src="./assets/icons/graduation-icon.svg" alt="">
-          <a href="javascript:void(0)">Student</a>
-        </li>
-        <li>
-          <img class="icons" src="./assets/icons/payment-icon.svg" alt="">
-          <a href="javascript:void(0)">Payment</a>
-        </li>
-        <li>
-          <img class="icons" src="./assets/icons/report-icon.svg" alt="">
-          <a href="javascript:void(0)">Report</a>
-        </li>
-        <li>
-          <img class="icons" src="./assets/icons/setting-icon.svg" alt="">
-          <a href="javascript:void(0)">Settings</a>
-        </li>
-      </ul>
-    </div>
-
-    <div class="logout">
-      <button onclick="handleLogout()" type="button">Log Out
-        <img src="./assets/icons/logout-icon.svg" alt="">
-      </button>
-    </div>
-  </div>
-
-
-  <div class="main-content">
-    <div class="nav">
-      <div class="search">
-        <input id="search-box" type="text" placeholder="Search...">
-        <img src="./assets/icons/search-icon.svg" alt="">
+      <div class="logout">
+        <button onclick="handleLogout()" type="button">
+          Log Out
+          <img
+            src="./assets/icons/logout-icon.svg"
+            alt=""
+          />
+        </button>
       </div>
     </div>
 
-    <div class="main-dashboard">
-      <div class="dashboard-top">
-        <h2 class="dashboard-title">Students List</h2>
-        <button class="btn-add" id="btn-add"> Add new student</button>
+    <div class="main-content">
+      <div class="nav">
+        <div class="search">
+          <input
+            id="search-box"
+            type="text"
+            placeholder="Search..."
+          />
+          <img
+            src="./assets/icons/search-icon.svg"
+            alt=""
+          />
+        </div>
       </div>
-      <div class="content">
-        <table>
-          <thead>
-            <tr class="field-name">
-              <th>Avatar</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Enroll Number</th>
-              <th>Date of admission</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="students-list">
-          </tbody>
-        </table>
+
+      <div class="main-dashboard">
+        <div class="dashboard-top">
+          <h2 class="dashboard-title">Students List</h2>
+          <button class="btn-add" id="btn-add">
+            Add new student
+          </button>
+        </div>
+        <div class="content">
+          <table>
+            <thead>
+              <tr class="field-name">
+                <th>Avatar</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Enroll Number</th>
+                <th>Date of admission</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="students-list"></tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- modal -->
-  <div id="modal-container">
-    <div id="modal">
-      <div class="modal-header">
-        <h3>Student Information</h3>
-        <button id="btn-close">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="form-add">
-          <div class="form-value">
-            <label class="form-lable">Name</label>
-            <input type="text" id="name" class="form-control" required>
-          </div>
-          <div class="form-value">
-            <label class="form-lable">Email</label>
-            <input type="email" id="email" class="form-control" required>
-          </div>
-          <div class="form-value">
-            <label class="form-lable">Phone</label>
-            <input type="number" id="phone" class="form-control" required>
-          </div>
-          <div class="form-value">
-            <label class="form-lable">Enroll Number</label>
-            <input type="number" id="enroll-number" class="form-control" required>
-          </div>
-          <div class="form-value">
-            <label class="form-lable">Date of admission</label>
-            <input type="date" id="date-of-admission" class="form-control" required>
-          </div>
-          <div class="form-value">
-            <div class='file file-upload'>
-              <label for='upload-avatar'>
-                Upload Avatar
-              </label>
-              <input id='upload-avatar' onchange="uploadFile()" type='file' />
+    <!-- modal -->
+    <div id="modal-container">
+      <div id="modal">
+        <div class="modal-header">
+          <h3>Student Information</h3>
+          <button id="btn-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="form-add" >
+            <div class="form-value">
+              <label class="form-lable">Name</label>
+              <input
+                type="text"
+                id="name"
+                class="form-control"
+                required
+              />
             </div>
-            <img id="avatar-preview" height="120" />
+            <div class="form-value">
+              <label class="form-lable">Email</label>
+              <input
+                type="email"
+                id="email"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-value">
+              <label class="form-lable">Phone</label>
+              <input
+                type="number"
+                id="phone"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-value">
+              <label class="form-lable"
+                >Enroll Number</label
+              >
+              <input
+                type="number"
+                id="enroll-number"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-value">
+              <label class="form-lable"
+                >Date of admission</label
+              >
+              <input
+                type="date"
+                id="date-of-admission"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-value">
+              <div class="file file-upload">
+                <label for="upload-avatar">
+                  Upload Avatar
+                </label>
+                <input
+                  id="upload-avatar"
+                  onchange="uploadFile(this)"
+                  type="file"
+                />
+              </div>
+              <img id="avatar-preview" height="120" />
+            </div>
+            <div class="form-value">
+              <button
+                class="btn-submit"
+                id="btn-save"
+                type="button"
+              >
+                Save
+              </button>
+            </div>
           </div>
-          <div class="form-value">
-            <button class="btn-submit" id="btn-save" type="submit">Save</button>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script src="./javascript/students.js"></script>
-</body>
-
+    <script type="module" src="./javascript/students.js"></script>
+  </body>
 </html>

@@ -1,68 +1,90 @@
+import {
+  getStudent,
+  createStudent,
+  deleteStudent,
+  updateStudent,
+} from "./method.js";
+
+import { LOGIN_PAGE } from "./constant.js";
+
+const $ = document.querySelector.bind(document);
+const $$ = document.querySelectorAll.bind(document);
+
 // Query elements modal
-const btnAdd = document.getElementById('btn-add')
-const btnClose = document.getElementById('btn-close')
-const btnSave = document.getElementById('btn-save')
-const modalContainer = document.getElementById('modal-container')
+const btnAdd = $("#btn-add");
+const btnClose = $("#btn-close");
+const btnSave = $("#btn-save");
+const modalContainer = $("#modal-container");
 
 //Query elements
-const searchBox = document.getElementById('search-box')
-const formAdd = document.getElementById('form-add')
-const studentList = document.getElementById('students-list')
-const nameStudent = document.getElementById('name')
-const emailStudent = document.getElementById('email')
-const phoneStudent = document.getElementById('phone')
-const enrollNumber = document.getElementById('enroll-number')
-const dateOfAdmission = document.getElementById('date-of-admission')
-const avatar = document.getElementById('upload-avatar')
-const avatarPreview = document.getElementById('avatar-preview')
-const checkAll = document.getElementById("check-all")
+const searchBox = $("#search-box");
+const logoutBtn = $(".logout");
+const formAdd = $("#form-add");
+const nameStudent = $("#name");
+const emailStudent = $("#email");
+const phoneStudent = $("#phone");
+const enrollNumber = $("#enroll-number");
+const dateOfAdmission = $("#date-of-admission");
+const avatar = $("#upload-avatar");
+const username = $(".name");
+const avatarPreview = $("#avatar-preview");
+const checkAll = $("#check-all");
 
+const user = JSON.parse(localStorage.getItem("user"));
+if (!user) {
+  window.location.href = LOGIN_PAGE;
+}
 
-const apiStudents = "http://localhost:3000/students"
-
-/**
- * Modal
- * Popup to add user when clicking on Add new button.
- */
-btnAdd.addEventListener('click', () => {
-  modalContainer.classList.add('show')
-})
-
-/**
- * Modal
- * Hidden popup to add user when clicking on close button.
- */
-btnClose.addEventListener('click', () => {
-  modalContainer.classList.remove('show')
-})
+username.innerHTML = user.name;
 
 const start = () => {
-  getStudents(renderStudents)
-  handleSearch()
-  handleAdd()
-}
+  getStudent()
+    .then((student) => renderStudents(student))
+    .catch((error) => {
+      console.log(error);
+      alert("Error: " + error);
+    });
+  handleSearch();
+};
 
-/**
- * Takes data from the API
- */
-const getStudents = (callback) => {
-  fetch(apiStudents)
-    .then((res) => res.json())
-    .then(callback)
-}
+const hideModal = () => {
+  modalContainer.classList.remove("show");
+};
 
-/**
- * Search students
- * Takes data from the API and displays it on a table in HTML
- */
-const renderStudents = (students) => {
-  const data = students
+const showModal = () => {
+  modalContainer.classList.add("show");
+};
 
+// Upload avatar picture
+avatar.onchange = () => {
+  uploadFile();
+};
+
+const uploadFile = () => {
+  const reader = new FileReader();
+  const file = avatar.files[0];
+  reader.readAsDataURL(file);
+  reader.onloadend = () => {
+    avatarPreview.src = reader.result;
+  };
+};
+
+const renderStudents = (student) => {
+  const studentList = $("#students-list");
+
+  const html = student
     //Filter the name search box and display it on the table
     .filter(
-      (field) => field.name.toLowerCase().includes(searchBox.value.trim()) ||
-        field.email.toLowerCase().includes(searchBox.value.trim()) ||
-        field.phone.toLowerCase().includes(searchBox.value.trim())
+      (field) =>
+        field.name
+          .toLowerCase()
+          .includes(searchBox.value.trim()) ||
+        field.email
+          .toLowerCase()
+          .includes(searchBox.value.trim()) ||
+        field.phone
+          .toLowerCase()
+          .includes(searchBox.value.trim())
     )
 
     //Display student information in the table
@@ -78,129 +100,141 @@ const renderStudents = (students) => {
       <td>${field.enrollNumber}</td>
       <td>${field.dateOfAdmission}</td>
       <td>
-        <button onclick="handleUpdate(${field.id})" class="action-btn" id="btn-edit">
+        <button class="action-btn btn-edit" id="${field.id}">
           <img src="./assets/icons/edit-icon.svg" alt="">
         </button>
-        <button onclick="handleDelete(${field.id})" class="action-btn">
+        <button class="action-btn btn-delete" id="${field.id}">
           <img src="./assets/icons/delete-icon.svg" alt="">
         </button>
       </td>
-    </tr>`
-    })
-  studentList.innerHTML = data.join(' ')
+    </tr>`;
+    });
+  studentList.innerHTML = html.join("");
 
-  const btnEdit = document.querySelectorAll('#btn-edit')
+  const btnEdit = $$(".btn-edit");
   // Popup to add user when clicking on edit button.
   btnEdit.forEach((item) => {
-    item.addEventListener('click', () => {
-      modalContainer.classList.add('show')
-    })
-  })
-}
+    item.addEventListener("click", () => {
+      modalContainer.classList.add("show");
+      handleUpdate(item.id);
+    });
+  });
+
+  const btnDel = $$(".btn-delete");
+  btnDel.forEach((item) => {
+    item.addEventListener("click", () => {
+      handleDelete(item.id);
+    });
+  });
+};
+
+const handleSubmit = () => {
+  const formData = {
+    id: Math.floor(Math.random() * 1000),
+    name: nameStudent.value,
+    email: emailStudent.value,
+    phone: phoneStudent.value,
+    enrollNumber: enrollNumber.value,
+    dateOfAdmission: dateOfAdmission.value,
+    avatar: avatarPreview.src,
+  };
+
+  createStudent(formData).then(() => {
+    getStudent()
+      .then((student) => renderStudents(student))
+      .catch((error) => {
+        console.log(error);
+        alert("Error: " + error);
+      });
+  });
+  hideModal();
+};
 
 // Delete student function
 const handleDelete = (id) => {
-  const confirm = window.confirm("Do you want to delete this student ?")
-  if (confirm) {
-    fetch(apiStudents + `/${id}`, {
-      method: 'DELETE'
-    })
-  }
-  getStudents(renderStudents)
-}
-
-// Upload avatar picture
-const reader = new FileReader()
-const uploadFile = () => {
-  reader.addEventListener(
-    "load",
-    function () {
-      avatarPreview.src = reader.result
-    },
-    false
-  )
-  const file = avatar.files[0]
-  if (file) {
-    reader.readAsDataURL(file)
-  }
-}
-
-// Add student function
-const handleAdd = () => {
-  formAdd.addEventListener("submit", function (e) {
-    e.preventDefault()
-    const formData = {
-      id: Math.floor(Math.random() * 1000),
-      name: nameStudent.value,
-      email: emailStudent.value,
-      phone: phoneStudent.value,
-      enrollNumber: enrollNumber.value,
-      dateOfAdmission: dateOfAdmission.value,
-      avatar: avatarPreview.getAttribute("src")
-    }
-    fetch(apiStudents, {
-      method: "POST",
-      body: JSON.stringify(formData),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-    getStudents(renderStudents)
-  })
-}
+  deleteStudent(id).then(() => {
+    getStudent()
+      .then((student) => renderStudents(student))
+      .catch((error) => {
+        console.log(error);
+        alert("Error: " + error);
+      });
+  });
+};
 
 //Search students function
 const handleSearch = () => {
   searchBox.addEventListener("keyup", function (e) {
-    getStudents(renderStudents)
-  })
-}
-
-
-// GET method implementation
-const getApi = (apiStudents, handleGetApi) => {
-  const options = {
-    method: 'GET',
-  }
-  // Parses JSON response into native JavaScript objects
-  fetch(apiStudents, options)
-    .then((res) => res.json())
-    .then((data) => { handleGetApi(data) })
-}
+    getStudent()
+      .then((student) => {
+        renderStudents(student);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Error: " + error);
+      });
+  });
+};
 
 // Update students function
+
 const handleUpdate = (id) => {
-  getApi(`${apiStudents}/${id}`, (field) => {
-    nameStudent.value = field.name,
-      emailStudent.value = field.email,
-      phoneStudent.value = field.phone,
-      enrollNumber.value = field.enrollNumber,
-      dateOfAdmission.value = field.dateOfAdmission,
-      avatarPreview.setAttribute("src", field.avatar)
-  })
-  btnSave.addEventListener('click', function (e) {
-    e.preventDefault()
+  getStudent()
+    .then((student) => {
+      student.forEach((item) => {
+        if (item.id == id) {
+          nameStudent.value = item.name;
+          emailStudent.value = item.email;
+          phoneStudent.value = item.phone;
+          enrollNumber.value = item.enrollNumber;
+          dateOfAdmission.value = item.dateOfAdmission;
+          avatarPreview.src = item.avatar;
+        }
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      alert("Error: " + error);
+    });
+
+  const handleEdit = () => {
     const formData = {
-      avatar: avatarPreview.getAttribute('src') || '',
+      avatar: avatarPreview.src || "",
       name: nameStudent.value,
       email: emailStudent.value,
       phone: phoneStudent.value,
       enrollNumber: enrollNumber.value,
       dateOfAdmission: dateOfAdmission.value,
-    }
-    fetch(apiStudents + `/${id}`, {
-      method: "PATCH",
-      body: JSON.stringify(formData),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      }
-    })
-  })
-}
+    };
 
+    updateStudent(id, formData).then(() => {
+      getStudent()
+        .then((student) => renderStudents(student))
+        .catch((error) => {
+          console.log(error);
+          alert("Error: " + error);
+        });
+    });
+    hideModal();
+
+    btnSave.removeEventListener("click", handleEdit);
+  };
+
+  btnSave.removeEventListener("click", handleSubmit);
+
+  btnSave.addEventListener("click", handleEdit);
+};
 
 const handleLogout = () => {
-  window.location.href = './login.html'
-}
+  localStorage.removeItem("user");
+  window.location.href = "./login.html";
+};
 
-start()
+btnAdd.addEventListener("click", showModal);
+btnClose.addEventListener("click", hideModal);
+
+btnSave.addEventListener("click", handleSubmit);
+
+logoutBtn.addEventListener("click", handleLogout);
+
+start();
