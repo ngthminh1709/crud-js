@@ -1,4 +1,7 @@
-import { LOGIN_PAGE } from "./constant.js";
+import {
+  CREATE_ERROR_MESSAGE,
+  LOGIN_PAGE,
+} from "./constant.js";
 import Method from "./method.js";
 const {
   getStudent,
@@ -12,6 +15,7 @@ const $$ = document.querySelectorAll.bind(document);
 
 // Query elements modal
 const btnAdd = $("#btn-add");
+const btnDelete = $("#btn-delete-checked");
 const btnClose = $("#btn-close");
 const btnSave = $("#btn-save");
 const modalContainer = $("#modal-container");
@@ -26,6 +30,8 @@ const phoneStudent = $("#phone");
 const enrollNumber = $("#enroll-number");
 const dateOfAdmission = $("#date-of-admission");
 const avatar = $("#upload-avatar");
+const userAvatar = $(".avatar");
+const job = $(".job");
 const username = $(".name");
 const avatarPreview = $("#avatar-preview");
 const checkAll = $("#check-all");
@@ -36,14 +42,21 @@ if (!user) {
 }
 
 username.innerHTML = user.name;
+userAvatar.src = user.avatar;
+job.innerHTML = user.role;
 
-const start = () => {
+const afterGet = (msg) => {
   getStudent()
     .then((student) => renderStudents(student))
     .catch((error) => {
       console.log(error);
-      alert("Error: " + error);
+      D;
+      alert("Error: " + msg);
     });
+};
+
+const start = () => {
+  afterGet("Không thể Start!");
   handleSearch();
 };
 
@@ -69,6 +82,31 @@ const uploadFile = () => {
   };
 };
 
+checkAll.addEventListener("click", () => {
+  const checkedArray = $$(".user-checkbox");
+  checkedArray.forEach(
+    (item) => (item.checked ? item.checked = true : item.checked = !item.checked)
+  );
+});
+
+const handleCheckBox = async () => {
+  const checked = Array.from($$(".user-checkbox")).filter(
+    (item) => item.checked
+  );
+  if (!checked.length) return;
+
+  const confirm = window.confirm(
+    "Are you sure you want to delete all checked user?"
+  );
+  if (!confirm) return;
+
+  for (const item of checked) {
+    await deleteStudent(item.value).then(() => {
+      afterGet("Error When deleting student!");
+    });
+  }
+};
+
 const renderStudents = (student) => {
   const studentList = $("#students-list");
 
@@ -91,6 +129,7 @@ const renderStudents = (student) => {
     .map((field) => {
       return `
     <tr class="students-value">
+      <td><input class="user-checkbox" type="checkbox" value="${field.id}"/></td>
       <td>
         <img class="img-avatar" src="${field.avatar}" alt="">
       </td>
@@ -140,18 +179,18 @@ const handleSubmit = () => {
   };
 
   createStudent(formData).then(() => {
-    getStudent()
-      .then((student) => renderStudents(student))
-      .catch((error) => {
-        console.log(error);
-        alert("Error: " + error);
-      });
+    afterGet(CREATE_ERROR_MESSAGE);
   });
   hideModal();
 };
 
 // Delete student function
 const handleDelete = (id) => {
+  const confirm = window.confirm(
+    "Are you sure you want to delete?"
+  );
+  if (!confirm) return;
+
   deleteStudent(id).then(() => {
     getStudent()
       .then((student) => renderStudents(student))
@@ -232,6 +271,8 @@ const handleLogout = () => {
 
 btnAdd.addEventListener("click", showModal);
 btnClose.addEventListener("click", hideModal);
+
+btnDelete.addEventListener("click", handleCheckBox);
 
 btnSave.addEventListener("click", handleSubmit);
 

@@ -31,6 +31,8 @@ const handleLogin = async () => {
           JSON.stringify({
             email: checker.email,
             name: checker.name,
+            role: checker.role,
+            avatar: checker.avatar,
           })
         );
         window.location.href = STUDENTS_PAGE;
