@@ -84,9 +84,16 @@ const uploadFile = () => {
 
 checkAll.addEventListener("click", () => {
   const checkedArray = $$(".user-checkbox");
-  checkedArray.forEach(
-    (item) => (item.checked ? item.checked = true : item.checked = !item.checked)
-  );
+  checkedArray.forEach((item) => {
+    item.checked && checkAll.checked
+      ? (item.checked = true)
+      : (item.checked = !item.checked);
+    item.onclick = () => {
+      !item.checked && checkAll.checked
+        ? (checkAll.checked = false)
+        : true;
+    };
+  });
 });
 
 const handleCheckBox = async () => {
@@ -101,7 +108,7 @@ const handleCheckBox = async () => {
   if (!confirm) return;
 
   for (const item of checked) {
-    await deleteStudent(item.value)
+    await deleteStudent(item.value);
   }
   afterGet("Error When deleting student!");
 };
@@ -192,7 +199,7 @@ const handleDelete = (id) => {
 
   deleteStudent(id).then(() => {
     const student = $(`.student-${id}`);
-    student && student.remove()
+    student && student.remove();
   });
 };
 
