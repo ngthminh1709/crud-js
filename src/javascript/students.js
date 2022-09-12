@@ -101,10 +101,9 @@ const handleCheckBox = async () => {
   if (!confirm) return;
 
   for (const item of checked) {
-    await deleteStudent(item.value).then(() => {
-      afterGet("Error When deleting student!");
-    });
+    await deleteStudent(item.value)
   }
+  afterGet("Error When deleting student!");
 };
 
 const renderStudents = (student) => {
@@ -128,7 +127,7 @@ const renderStudents = (student) => {
     //Display student information in the table
     .map((field) => {
       return `
-    <tr class="students-value">
+    <tr class="students-value student-${field.id}">
       <td><input class="user-checkbox" type="checkbox" value="${field.id}"/></td>
       <td>
         <img class="img-avatar" src="${field.avatar}" alt="">
@@ -192,12 +191,8 @@ const handleDelete = (id) => {
   if (!confirm) return;
 
   deleteStudent(id).then(() => {
-    getStudent()
-      .then((student) => renderStudents(student))
-      .catch((error) => {
-        console.log(error);
-        alert("Error: " + error);
-      });
+    const student = $(`.student-${id}`);
+    student && student.remove()
   });
 };
 
