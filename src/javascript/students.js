@@ -35,11 +35,14 @@ const job = $(".job");
 const username = $(".name");
 const avatarPreview = $("#avatar-preview");
 const checkAll = $("#check-all");
+const studentList = $("#students-list");
 
 const user = JSON.parse(localStorage.getItem("user"));
 if (!user) {
   window.location.href = LOGIN_PAGE;
 }
+
+var studentsArray = [];
 
 username.innerHTML = user.name;
 userAvatar.src = user.avatar;
@@ -50,13 +53,16 @@ const afterGet = (msg) => {
     .then((student) => renderStudents(student))
     .catch((error) => {
       console.log(error);
-      D;
       alert("Error: " + msg);
     });
 };
 
 const start = () => {
-  afterGet("Không thể Start!");
+  getStudent().then((student) => {
+    studentsArray = student;
+    console.log(studentsArray);
+    renderStudents(student);
+  });
   handleSearch();
 };
 
@@ -113,10 +119,30 @@ const handleCheckBox = async () => {
   afterGet("Error When deleting student!");
 };
 
-const renderStudents = (student) => {
-  const studentList = $("#students-list");
+const innerHtml = (formData) => {
+  return `<tr class="students-value student-${formData.id}">
+  <td><input class="user-checkbox" type="checkbox" value="${formData.id}"/></td>
+  <td>
+    <img class="img-avatar" src="${formData.avatar}" alt="">
+  </td>
+  <td>${formData.name}</td>
+  <td>${formData.email}</td>
+  <td>${formData.phone}</td>
+  <td>${formData.enrollNumber}</td>
+  <td>${formData.dateOfAdmission}</td>
+  <td>
+    <button class="action-btn btn-edit" id="${formData.id}">
+      <img src="./assets/icons/edit-icon.svg" alt="">
+    </button>
+    <button class="action-btn btn-delete" id="${formData.id}">
+      <img src="./assets/icons/delete-icon.svg" alt="">
+    </button>
+  </td>
+</tr>`;
+};
 
-  const html = student
+const renderStudents = (student) => {
+  const element = student
     //Filter the name search box and display it on the table
     .filter(
       (field) =>
@@ -133,28 +159,10 @@ const renderStudents = (student) => {
 
     //Display student information in the table
     .map((field) => {
-      return `
-    <tr class="students-value student-${field.id}">
-      <td><input class="user-checkbox" type="checkbox" value="${field.id}"/></td>
-      <td>
-        <img class="img-avatar" src="${field.avatar}" alt="">
-      </td>
-      <td>${field.name}</td>
-      <td>${field.email}</td>
-      <td>${field.phone}</td>
-      <td>${field.enrollNumber}</td>
-      <td>${field.dateOfAdmission}</td>
-      <td>
-        <button class="action-btn btn-edit" id="${field.id}">
-          <img src="./assets/icons/edit-icon.svg" alt="">
-        </button>
-        <button class="action-btn btn-delete" id="${field.id}">
-          <img src="./assets/icons/delete-icon.svg" alt="">
-        </button>
-      </td>
-    </tr>`;
+      const html = innerHtml(field);
+      return html;
     });
-  studentList.innerHTML = html.join("");
+  studentList.innerHTML = element.join("");
 
   const btnEdit = $$(".btn-edit");
   // Popup to add user when clicking on edit button.
@@ -173,7 +181,7 @@ const renderStudents = (student) => {
   });
 };
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   const formData = {
     id: Math.floor(Math.random() * 1000),
     name: nameStudent.value,
@@ -184,9 +192,11 @@ const handleSubmit = () => {
     avatar: avatarPreview.src,
   };
 
-  createStudent(formData).then(() => {
-    afterGet(CREATE_ERROR_MESSAGE);
-  });
+  await createStudent(formData);
+
+  studentsArray.push(formData);
+  renderStudents(studentsArray);
+
   hideModal();
 };
 
@@ -206,14 +216,7 @@ const handleDelete = (id) => {
 //Search students function
 const handleSearch = () => {
   searchBox.addEventListener("keyup", function (e) {
-    getStudent()
-      .then((student) => {
-        renderStudents(student);
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("Error: " + error);
-      });
+    renderStudents(studentsArray);
   });
 };
 
@@ -240,6 +243,7 @@ const handleUpdate = (id) => {
 
   const handleEdit = () => {
     const formData = {
+      id,
       avatar: avatarPreview.src || "",
       name: nameStudent.value,
       email: emailStudent.value,
@@ -247,15 +251,19 @@ const handleUpdate = (id) => {
       enrollNumber: enrollNumber.value,
       dateOfAdmission: dateOfAdmission.value,
     };
+    const arrayInstances = studentsArray.map(
+      (item) => {
+        if (item.id == id) {
+          return formData;
+        }
+        return item;
+      }
+    );
+    updateStudent(id, formData);
 
-    updateStudent(id, formData).then(() => {
-      getStudent()
-        .then((student) => renderStudents(student))
-        .catch((error) => {
-          console.log(error);
-          alert("Error: " + error);
-        });
-    });
+    studentsArray = arrayInstances;
+    renderStudents(arrayInstances);
+
     hideModal();
 
     btnSave.removeEventListener("click", handleEdit);
