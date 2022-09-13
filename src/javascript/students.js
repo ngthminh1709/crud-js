@@ -114,8 +114,10 @@ const handleCheckBox = async () => {
 
   for (const item of checked) {
     await deleteStudent(item.value);
+    const student = $(`.student-${item.value}`);
+    student && student.remove();
   }
-  afterGet("Error When deleting student!");
+  // afterGet("Error When deleting student!");
 };
 
 const innerHtml = (formData) => {
