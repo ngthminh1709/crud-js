@@ -60,7 +60,6 @@ const afterGet = (msg) => {
 const start = () => {
   getStudent().then((student) => {
     studentsArray = student;
-    console.log(studentsArray);
     renderStudents(student);
   });
   handleSearch();
@@ -251,14 +250,12 @@ const handleUpdate = (id) => {
       enrollNumber: enrollNumber.value,
       dateOfAdmission: dateOfAdmission.value,
     };
-    const arrayInstances = studentsArray.map(
-      (item) => {
-        if (item.id == id) {
-          return formData;
-        }
-        return item;
+    const arrayInstances = studentsArray.map((item) => {
+      if (item.id == id) {
+        return formData;
       }
-    );
+      return item;
+    });
     updateStudent(id, formData);
 
     studentsArray = arrayInstances;
