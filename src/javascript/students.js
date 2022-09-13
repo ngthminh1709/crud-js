@@ -67,6 +67,12 @@ const start = () => {
 
 const hideModal = () => {
   modalContainer.classList.remove("show");
+  nameStudent.value = "";
+  emailStudent.value = "";
+  phoneStudent.value = "";
+  enrollNumber.value = "";
+  dateOfAdmission.value = "";
+  avatarPreview.src = "";
 };
 
 const showModal = () => {
