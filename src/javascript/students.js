@@ -65,6 +65,20 @@ const start = () => {
   handleSearch();
 };
 
+const setupForm = (id = null) => {
+  var idInstance = id;
+  if (!id) idInstance = Math.floor(Math.random() * 1000);
+  return {
+    id: idInstance,
+    name: nameStudent.value,
+    email: emailStudent.value,
+    phone: phoneStudent.value,
+    enrollNumber: enrollNumber.value,
+    dateOfAdmission: dateOfAdmission.value,
+    avatar: avatarPreview.src,
+  }
+}
+
 const hideModal = () => {
   modalContainer.classList.remove("show");
   nameStudent.value = "";
@@ -189,15 +203,7 @@ const renderStudents = (student) => {
 };
 
 const handleSubmit = async () => {
-  const formData = {
-    id: Math.floor(Math.random() * 1000),
-    name: nameStudent.value,
-    email: emailStudent.value,
-    phone: phoneStudent.value,
-    enrollNumber: enrollNumber.value,
-    dateOfAdmission: dateOfAdmission.value,
-    avatar: avatarPreview.src,
-  };
+  const formData = setupForm();
 
   await createStudent(formData);
 
@@ -249,15 +255,7 @@ const handleUpdate = (id) => {
     });
 
   const handleEdit = () => {
-    const formData = {
-      id,
-      avatar: avatarPreview.src || "",
-      name: nameStudent.value,
-      email: emailStudent.value,
-      phone: phoneStudent.value,
-      enrollNumber: enrollNumber.value,
-      dateOfAdmission: dateOfAdmission.value,
-    };
+    const formData = setupForm(id);
     const arrayInstances = studentsArray.map((item) => {
       if (item.id == id) {
         return formData;
