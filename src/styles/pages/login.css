@@ -80,6 +80,11 @@ body {
   padding-left: 25px;
 }
 
+.form-group .form-message {
+  text-align: center;
+  color: rgb(255, 0, 0);
+}
+
 #message-error {
   text-align: center;
   color: rgb(255, 0, 0);
