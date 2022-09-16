@@ -298,6 +298,7 @@ Validator({
     Validator.isRequired('#upload-avatar', 'Vui lòng nhập Avatar'),
     Validator.isEmail('#email'),
     Validator.minLength('#name', 6),
+    Validator.minLength('#phone', 10),
   ],
 });
 
