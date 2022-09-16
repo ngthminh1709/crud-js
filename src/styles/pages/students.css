@@ -292,6 +292,11 @@ table #students-list .students-value {
   margin: 0;
 }
 
+#modal .modal-body .form-message {
+  color: red !important;
+  margin: 0;
+}
+
 #btn-close {
   cursor: pointer;
   font-size: 30px;

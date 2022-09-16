@@ -152,15 +152,17 @@
           <button id="btn-close">&times;</button>
         </div>
         <div class="modal-body">
-          <div id="form-add" >
+          <form class="form" id="form-add" >
             <div class="form-value">
               <label class="form-lable">Name</label>
               <input
                 type="text"
                 id="name"
+                name="name"
                 class="form-control"
                 required
               />
+              <span class="form-message"></span>
             </div>
             <div class="form-value">
               <label class="form-lable">Email</label>
@@ -170,6 +172,7 @@
                 class="form-control"
                 required
               />
+              <span class="form-message"></span>
             </div>
             <div class="form-value">
               <label class="form-lable">Phone</label>
@@ -179,6 +182,7 @@
                 class="form-control"
                 required
               />
+              <span class="form-message"></span>
             </div>
             <div class="form-value">
               <label class="form-lable"
@@ -190,6 +194,7 @@
                 class="form-control"
                 required
               />
+              <span class="form-message"></span>
             </div>
             <div class="form-value">
               <label class="form-lable"
@@ -201,6 +206,7 @@
                 class="form-control"
                 required
               />
+              <span class="form-message"></span>
             </div>
             <div class="form-value">
               <div class="file file-upload">
@@ -219,12 +225,12 @@
               <button
                 class="btn-submit"
                 id="btn-save"
-                type="button"
+                type="submit"
               >
                 Save
               </button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

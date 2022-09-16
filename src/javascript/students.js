@@ -3,11 +3,13 @@ import {
   LOGIN_PAGE,
 } from "./constant.js";
 import Method from "./method.js";
+import Validator from "./validate.js";
 const {
   getStudent,
   createStudent,
   deleteStudent,
   updateStudent,
+  handleLogout,
 } = new Method();
 
 const $ = document.querySelector.bind(document);
@@ -48,19 +50,13 @@ username.innerHTML = user.name;
 userAvatar.src = user.avatar;
 job.innerHTML = user.role;
 
-const afterGet = (msg) => {
-  getStudent()
-    .then((student) => renderStudents(student))
-    .catch((error) => {
-      console.log(error);
-      alert("Error: " + msg);
-    });
-};
-
 const start = () => {
   getStudent().then((student) => {
     studentsArray = student;
     renderStudents(student);
+  }).catch(err => {
+    console.log(err);
+    alert('Error: ' + CREATE_ERROR_MESSAGE);
   });
   handleSearch();
 };
@@ -79,19 +75,7 @@ const setupForm = (id = null) => {
   }
 }
 
-const hideModal = () => {
-  modalContainer.classList.remove("show");
-  nameStudent.value = "";
-  emailStudent.value = "";
-  phoneStudent.value = "";
-  enrollNumber.value = "";
-  dateOfAdmission.value = "";
-  avatarPreview.src = "";
-};
 
-const showModal = () => {
-  modalContainer.classList.add("show");
-};
 
 // Upload avatar picture
 avatar.onchange = () => {
@@ -108,7 +92,9 @@ const uploadFile = () => {
 };
 
 checkAll.addEventListener("click", () => {
+
   const checkedArray = $$(".user-checkbox");
+
   checkedArray.forEach((item) => {
     item.checked && checkAll.checked
       ? (item.checked = true)
@@ -137,7 +123,6 @@ const handleCheckBox = async () => {
     const student = $(`.student-${item.value}`);
     student && student.remove();
   }
-  // afterGet("Error When deleting student!");
 };
 
 const innerHtml = (formData) => {
@@ -198,6 +183,8 @@ const renderStudents = (student) => {
   btnDel.forEach((item) => {
     item.addEventListener("click", () => {
       handleDelete(item.id);
+      const arrayInstances = studentsArray.filter((student) => student.id != item.id);
+      studentsArray = arrayInstances;
     });
   });
 };
@@ -258,37 +245,60 @@ const handleUpdate = (id) => {
     const formData = setupForm(id);
     const arrayInstances = studentsArray.map((item) => {
       if (item.id == id) {
+        const student = $(`.student-${id}`);
+        const editedStudent = innerHtml(formData)
+        student.innerHTML = editedStudent;
         return formData;
       }
       return item;
     });
     updateStudent(id, formData);
-
     studentsArray = arrayInstances;
-    renderStudents(arrayInstances);
-
     hideModal();
-
-    btnSave.removeEventListener("click", handleEdit);
   };
 
-  btnSave.removeEventListener("click", handleSubmit);
-
-  btnSave.addEventListener("click", handleEdit);
+  btnSave.onclick = handleEdit;
 };
 
-const handleLogout = () => {
-  localStorage.removeItem("user");
-  window.location.href = "./login.html";
+const hideModal = () => {
+  modalContainer.classList.remove("show");
+  btnSave.onclick = handleSubmit;
+  nameStudent.value = "";
+  emailStudent.value = "";
+  phoneStudent.value = "";
+  enrollNumber.value = "";
+  dateOfAdmission.value = "";
+  avatarPreview.src = "";
 };
+
+const showModal = () => {
+  modalContainer.classList.add("show");
+  const errrorMessage = $$('.form-message');
+  errrorMessage.forEach(item => item.innerText = '')
+};
+
+btnSave.onclick = handleSubmit;
 
 btnAdd.addEventListener("click", showModal);
 btnClose.addEventListener("click", hideModal);
 
 btnDelete.addEventListener("click", handleCheckBox);
 
-btnSave.addEventListener("click", handleSubmit);
-
 logoutBtn.addEventListener("click", handleLogout);
+
+Validator({
+  form: '#form-add',
+  formGroupSelector: '.form-value',
+  errorSelector: '.form-message',
+  rules: [
+    Validator.isRequired('#name', 'Vui lòng nhập tên của bạn'),
+    Validator.isRequired('#phone', 'Vui lòng nhập số điện thoại'),
+    Validator.isRequired('#enroll-number', 'Vui lòng nhập số Enroll'),
+    Validator.isRequired('#date-of-admission', 'Vui lòng nhập ngày sinh'),
+    Validator.isRequired('#upload-avatar', 'Vui lòng nhập Avatar'),
+    Validator.isEmail('#email'),
+    Validator.minLength('#name', 6),
+  ],
+});
 
 start();

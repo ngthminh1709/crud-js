@@ -95,6 +95,11 @@ class Method {
       console.log("Error: " + error);
     }
   }
+
+  handleLogout = () => {
+    localStorage.removeItem("user");
+    window.location.href = "./login.html";
+  };
 }
 
 export default Method;
